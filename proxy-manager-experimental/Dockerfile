@@ -96,7 +96,7 @@ RUN \
         /var/lib/nginx \
         /var/log/nginx \
         /var/tmp/nginx \
-        /var/www
+        /var/www \
 
 # Copy root filesystem
 COPY rootfs /

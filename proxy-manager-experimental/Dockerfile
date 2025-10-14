@@ -35,7 +35,7 @@ RUN \
         npm=11.3.0-r1 \
         openssl=3.5.4-r0 \
         py3-pip=25.1.1-r0 \
-        python3=3.12.11-r0 \
+        python3=3.12.12-r0 \
         yarn=1.22.22-r1 \
     \
     && yarn global add modclean \

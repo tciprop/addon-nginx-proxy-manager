@@ -14,7 +14,7 @@ COPY patches/*.patch /usr/src/
 # Setup base
 ARG NGINX_PROXY_MANAGER_VERSION="v2.12.4"
 # hadolint ignore=DL3003,DL3042
-# RUN \
+# RUN
 #     apk add --no-cache --virtual .build-dependencies \
 #         build-base \
 #         git \
@@ -22,7 +22,7 @@ ARG NGINX_PROXY_MANAGER_VERSION="v2.12.4"
 #         openssl-dev \
 #         patch \
 #         python3-dev \
-#     \
+#
 #     && apk add --no-cache \
 #         apache2-utils \
 #         certbot \
@@ -36,7 +36,7 @@ ARG NGINX_PROXY_MANAGER_VERSION="v2.12.4"
 #         py3-pip \
 #         python3 \
 #         yarn \
-RUN \
+RUN
     apk add --no-cache --virtual .build-dependencies \
         build-base=0.5-r3 \
         git=2.49.1-r0 \
@@ -44,7 +44,6 @@ RUN \
         openssl-dev=3.5.4-r0 \
         patch=2.8-r0 \
         python3-dev=3.12.11-r0 \
-    \
     && apk add --no-cache \
         apache2-utils=2.4.65-r0 \
         certbot=4.0.0-r0 \
@@ -58,68 +57,52 @@ RUN \
         py3-pip=25.1.1-r0 \
         python3=3.12.11-r0 \
         yarn=1.22.22-r1 \
-    \
     && yarn global add modclean \
-    \
     && curl -J -L -o /tmp/nginxproxymanager.tar.gz \
         "https://github.com/NginxProxyManager/nginx-proxy-manager/archive/${NGINX_PROXY_MANAGER_VERSION}.tar.gz" \
     && mkdir /app \
     && tar zxvf \
         /tmp/nginxproxymanager.tar.gz \
         --strip 1 -C /app \
-    \
     && for i in /usr/src/patches/*.patch; do \
         [ -e "$i" ] || continue; \
     patch -d /app -p 1 < "$i"; \
     done \
-    \
     && cd /app/frontend \
     && yarn install --ignore-engines --network-timeout 100000 \
     && yarn build --ignore-engines \
     && rm -rf node_modules \
-    \
     && mkdir -p /opt/nginx-proxy-manager/frontend \
     && cp -r /app/frontend/dist/. /opt/nginx-proxy-manager/frontend/ \
-    \
     && cd /app/backend \
     && yarn install \
     && rm -rf node_modules \
     && cp -r /app/backend/. /opt/nginx-proxy-manager/ \
-    \
     && cp -R /app/global/. /opt/nginx-proxy-manager/global/ \
-    \
     && cd /opt/nginx-proxy-manager \
     && yarn install \
     && rm -rf /etc/services.d/frontend \
     && rm -rf /opt/nginx-proxy-manager/config \
-    \
     && rm -f -r /etc/nginx \
     && cp -r /app/docker/rootfs/etc/nginx /etc/nginx \
     && rm -f /etc/nginx/conf.d/dev.conf \
-    \
     && cp /app/docker/rootfs/etc/letsencrypt.ini /etc \
     && cp /app/docker/rootfs/etc/logrotate.d/nginx-proxy-manager /etc/logrotate.d \
-    \
     && sed -i "s#user npm;#user root;#" /etc/nginx/nginx.conf \
     && sed -i "s#root /app/frontend;#root /opt/nginx-proxy-manager/frontend;#" \
         /etc/nginx/conf.d/production.conf \
     && sed -i "s#table.string('id').notNull().primary();#table.string('id', 32).notNull().primary();#" \
         /opt/nginx-proxy-manager/migrations/20190227065017_settings.js \
-    \
     && mkdir -p \
         /run/nginx \
-    \
     && modclean \
         --path /opt/nginx-proxy-manager \
         --no-progress \
         --keep-empty \
         --run \
-    \
     && yarn global remove modclean \
     && yarn cache clean \
-    \
     && apk del --purge .build-dependencies \
-    \
     && rm -f -r \
         /app \
         /etc/init.d/nginx \
@@ -140,7 +123,7 @@ RUN \
 COPY rootfs /
 
 # Ensure executable permissions for s6-overlay and cont-init.d scripts
-RUN \
+RUN
 # find /etc/s6-overlay/s6-rc.d -type f \( -name run -o -name up -o -name finish \) -exec chmod 0755 {} + 2>/dev/null || true && \
 # find /etc/cont-init.d -type f -exec chmod 0755 {} + 2>/dev/null || true
 

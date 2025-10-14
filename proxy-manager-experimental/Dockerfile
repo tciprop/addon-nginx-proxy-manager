@@ -116,6 +116,16 @@ RUN \
 # Copy root filesystem
 COPY rootfs /
 
+# Set permissions for logrotate configuration and cont-init scripts
+RUN if [ -f /etc/logrotate.d/nginx-proxy-manager ]; then \
+        chown root:root /etc/logrotate.d/nginx-proxy-manager && \
+        chmod 644 /etc/logrotate.d/nginx-proxy-manager; \
+    else \
+        echo "Warning: /etc/logrotate.d/nginx-proxy-manager not found"; \
+    fi && \
+    chown -R root:root /etc/cont-init.d && \
+    chmod -R 755 /etc/cont-init.d/*
+
 # Build arguments
 ARG BUILD_ARCH
 ARG BUILD_DATE

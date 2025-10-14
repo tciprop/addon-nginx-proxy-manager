@@ -14,7 +14,7 @@ COPY patches/*.patch /usr/src/
 # Setup base
 ARG NGINX_PROXY_MANAGER_VERSION="v2.12.4"
 # hadolint ignore=DL3003,DL3042
-# RUN
+# RUN \
 #     apk add --no-cache --virtual .build-dependencies \
 #         build-base \
 #         git \
@@ -36,7 +36,7 @@ ARG NGINX_PROXY_MANAGER_VERSION="v2.12.4"
 #         py3-pip \
 #         python3 \
 #         yarn \
-RUN
+RUN \
     apk add --no-cache --virtual .build-dependencies \
         build-base=0.5-r3 \
         git=2.49.1-r0 \
@@ -123,7 +123,7 @@ RUN
 COPY rootfs /
 
 # Ensure executable permissions for s6-overlay and cont-init.d scripts
-RUN
+# RUN \
 # find /etc/s6-overlay/s6-rc.d -type f \( -name run -o -name up -o -name finish \) -exec chmod 0755 {} + 2>/dev/null || true && \
 # find /etc/cont-init.d -type f -exec chmod 0755 {} + 2>/dev/null || true
 

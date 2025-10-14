@@ -145,7 +145,7 @@ RUN \
 # find /etc/cont-init.d -type f -exec chmod 0755 {} + 2>/dev/null || true
 
 # Build arguments
-ARG BUILD_ARCH
+ARG BUILD_ARCH=amd64
 ARG BUILD_DATE
 ARG BUILD_DESCRIPTION
 ARG BUILD_NAME

@@ -8,32 +8,55 @@ ENV NODE_OPTIONS="--openssl-legacy-provider"
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Copy patches directory (safe even if empty; ensure patches/ exists with a .gitkeep)
-COPY patches/ /usr/src/patches/
+COPY patches/*.patch /usr/src/
+# COPY patches/ /usr/src/patches/
 
-# Setup base
+Setup base
 ARG NGINX_PROXY_MANAGER_VERSION="v2.12.4"
+# RUN \
+#     apk add --no-cache --virtual .build-dependencies \
+#         build-base \
+#         git \
+#         libffi-dev \
+#         openssl-dev \
+#         patch \
+#         python3-dev \
+#     \
+#     && apk add --no-cache \
+#         apache2-utils \
+#         certbot \
+#         libcap \
+#         logrotate \
+#         nginx-mod-stream \
+#         nginx \
+#         nodejs \
+#         npm \
+#         openssl \
+#         py3-pip \
+#         python3 \
+#         yarn \
 RUN \
     apk add --no-cache --virtual .build-dependencies \
-        build-base \
-        git \
-        libffi-dev \
-        openssl-dev \
-        patch \
-        python3-dev \
+        build-base=0.5-r3 \
+        git=2.49.1-r0 \
+        libffi-dev=3.4.8-r0 \
+        openssl-dev=3.5.4-r0 \
+        patch=2.8-r0 \
+        python3-dev=3.12.11-r0 \
     \
     && apk add --no-cache \
-        apache2-utils \
-        certbot \
-        libcap \
-        logrotate \
-        nginx-mod-stream \
-        nginx \
-        nodejs \
-        npm \
-        openssl \
-        py3-pip \
-        python3 \
-        yarn \
+        apache2-utils=2.4.65-r0 \
+        certbot=4.0.0-r0 \
+        libcap=2.76-r0 \
+        logrotate=3.21.0-r1 \
+        nginx-mod-stream=1.28.0-r3 \
+        nginx=1.28.0-r3 \
+        nodejs=22.16.0-r2 \
+        npm=11.3.0-r1 \
+        openssl=3.5.4-r0 \
+        py3-pip=25.1.1-r0 \
+        python3=3.12.11-r0 \
+        yarn=1.22.22-r1 \
     \
     && yarn global add modclean \
     \
@@ -117,8 +140,8 @@ COPY rootfs /
 
 # Ensure executable permissions for s6-overlay and cont-init.d scripts
 RUN \
-find /etc/s6-overlay/s6-rc.d -type f \( -name run -o -name up -o -name finish \) -exec chmod 0755 {} + 2>/dev/null || true && \
-find /etc/cont-init.d -type f -exec chmod 0755 {} + 2>/dev/null || true
+# find /etc/s6-overlay/s6-rc.d -type f \( -name run -o -name up -o -name finish \) -exec chmod 0755 {} + 2>/dev/null || true && \
+# find /etc/cont-init.d -type f -exec chmod 0755 {} + 2>/dev/null || true
 
 # Build arguments
 ARG BUILD_ARCH
